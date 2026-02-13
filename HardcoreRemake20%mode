@@ -1,0 +1,55 @@
+--// DOORS MODE + SPRINT MERGED (ONE BLOCK)
+
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+
+local WALK_SPEED = 16
+local SPRINT_SPEED = 22
+local sprinting = false
+
+-- Setup tốc độ khi spawn
+local function setupCharacter(char)
+	local humanoid = char:WaitForChild("Humanoid")
+	humanoid.WalkSpeed = WALK_SPEED
+end
+
+if player.Character then
+	setupCharacter(player.Character)
+end
+
+player.CharacterAdded:Connect(setupCharacter)
+
+-- Tạo GUI sprint
+local gui = Instance.new("ScreenGui")
+gui.Name = "SprintGui"
+gui.ResetOnSpawn = false
+gui.Parent = player:WaitForChild("PlayerGui")
+
+local button = Instance.new("TextButton")
+button.Size = UDim2.new(0,70,0,70)
+button.Position = UDim2.new(1,-90,1,-120)
+button.BackgroundColor3 = Color3.fromRGB(25,25,25)
+button.Text = ""
+button.Parent = gui
+
+local corner = Instance.new("UICorner")
+corner.CornerRadius = UDim.new(1,0)
+corner.Parent = button
+
+button.MouseButton1Click:Connect(function()
+	local char = player.Character
+	if not char then return end
+	
+	local humanoid = char:FindFirstChild("Humanoid")
+	if not humanoid then return end
+	
+	sprinting = not sprinting
+	
+	if sprinting then
+		humanoid.WalkSpeed = SPRINT_SPEED
+		button.BackgroundColor3 = Color3.fromRGB(150,0,0)
+	else
+		humanoid.WalkSpeed = WALK_SPEED
+		button.BackgroundColor3 = Color3.fromRGB(25,25,25)
+	end
+end)
